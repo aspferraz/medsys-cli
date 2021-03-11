@@ -50,6 +50,7 @@
           class="mb-0"
         >
           <b-form-checkbox-group v-model="filterOn" class="mt-1">
+            <b-form-checkbox value="id">Id</b-form-checkbox>
             <b-form-checkbox value="DadosPessoais.nome">Nome</b-form-checkbox>
             <b-form-checkbox value="DadosPessoais.sobrenome">Sobrenome</b-form-checkbox>
             <b-form-checkbox value="DadosPessoais.cpf">Cpf</b-form-checkbox>
@@ -152,7 +153,7 @@ export default {
       totalRows: 0,
       items: [],
       criteria: null,
-      filterOn: ["DadosPessoais.nome"],
+      filterOn: ["id"],
       campos: [
         {
           key: "id",
@@ -239,6 +240,7 @@ export default {
         let queryStr;
         if (!this.filterOn.length) {
           queryStr = [
+            "id",
             "DadosPessoais.nome",
             "DadosPessoais.sobrenome",
             "DadosPessoais.cpf"

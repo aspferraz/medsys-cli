@@ -158,7 +158,7 @@
             id="input-rg"
             v-model="currentPaciente.DadosPessoais.rg"
             :state="null"
-            v-mask="['##.###.###-##','##.###.###-#']"
+            v-mask="{mask:'##.###.###-##'}"
             placeholder="Entre com o rg"
             trim
           ></b-form-input>
@@ -182,7 +182,7 @@
             v-model="currentPaciente.DadosPessoais.cpf"
             v-validate="{ required: true, cpf: true }"
             :state="validateState('cpf')"
-            v-mask="['###.###.###-##']"
+            v-mask="{mask:'###.###.###-##'}"
             placeholder="Entre com o cpf"
             trim
           ></b-form-input>
@@ -194,7 +194,7 @@
           <b-form-input
             id="input-telefone"
             v-model="currentPaciente.DadosPessoais.telefone"
-            v-mask="['+55 (##) ####-####']"
+            v-mask.number="{mask:'+55 (##) ####-####', unmaskedVar: 'currentPaciente.DadosPessoais.unmaskedTelefone'}"
             placeholder="+55 (00) 0000-0000"
             trim
           ></b-form-input>
@@ -204,7 +204,7 @@
           <b-form-input
             id="input-celular"
             v-model="currentPaciente.DadosPessoais.celular"
-            v-mask="['+55 (##) #####-####']"
+            v-mask.number="{mask:'+55 (##) #####-####', unmaskedVar: 'currentPaciente.DadosPessoais.unmaskedCelular'}"
             placeholder="+55 (00) 90000-0000"
             trim
           ></b-form-input>
@@ -225,7 +225,7 @@
           <b-form-input
             id="input-cep"
             v-model="currentPaciente.DadosPessoais.cep"
-            v-mask="'#####-###'"
+            v-mask="{mask:'#####-###'}"
             placeholder="00000-000"
             @blur="consultarCEP"
             trim
@@ -379,7 +379,8 @@ import EstadosDataService from "../services/EstadosDataService.js";
 import CidadesDataService from "../services/CidadesDataService.js";
 import HistoricosDataService from "../services/HistoricosDataService.js";
 // Local Directive
-import { mask } from "vue-the-mask";
+//import { mask } from "vue-the-mask";
+import { mask } from '@titou10/v-mask';
 
 import Messages from "../util/Messages.js";
 
@@ -423,6 +424,12 @@ export default {
   },
 
   watch: {
+    ["currentPaciente.DadosPessoais.dt_nascimento"]: function(val) {
+      if (!val || /^\s*$/.test(val)) {
+        this.currentPaciente.DadosPessoais.dt_nascimento = null;  
+      }
+    },
+
     ["currentPaciente.DadosPessoais.estado_id"]: function(val) {
       CidadesDataService.findByEstadoId(val).then(resp => {
         this.cidades = resp.data;
@@ -651,7 +658,11 @@ export default {
     },
 
     updatePaciente() {
-      PacientesDataService.update(this.currentPaciente)
+      let clonedPaciente = JSON.parse(JSON.stringify(this.currentPaciente));
+      clonedPaciente.DadosPessoais.telefone = this.currentPaciente.DadosPessoais.unmaskedTelefone;
+      clonedPaciente.DadosPessoais.celular = this.currentPaciente.DadosPessoais.unmaskedCelular;  
+
+      PacientesDataService.update(clonedPaciente)
         .then(response => {
           console.log(response.data);
           console.log(response.status);
