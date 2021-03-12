@@ -495,7 +495,7 @@
       <template v-slot:modal-footer>
         <div class="w-100">
           <div class="float-right">
-            <b-button variant="primary" size="md" class="mr-2" @click="downloadRecibo">Baixar PDF</b-button>
+            <!--<b-button variant="primary" size="md" class="mr-2" @click="downloadRecibo">Baixar PDF</b-button>-->
             <b-button variant="secondary" size="md" class="mr-2" @click="newRecibo">Adicionar Novo</b-button>
             <b-button variant="secondary" size="md" class="mr-2" @click="back">Voltar</b-button>
           </div>
